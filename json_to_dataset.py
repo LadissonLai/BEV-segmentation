@@ -17,14 +17,14 @@ from labelme import utils
    所以其实和视频中VOC数据集的格式一样。因此这样制作出来的数据集是可以正常使用的。也是正常的。
 '''
 if __name__ == '__main__':
-    jpgs_path   = "datasets/JPEGImages"
-    pngs_path   = "datasets/SegmentationClass"
-    classes     = ["_background_","aeroplane", "bicycle", "bird", "boat", "bottle", "bus", "car", "cat", "chair", "cow", "diningtable", "dog", "horse", "motorbike", "person", "pottedplant", "sheep", "sofa", "train", "tvmonitor"]
-    # classes     = ["_background_","cat","dog"]
+    jpgs_path   = "bev_datasets/JPEGImages"
+    pngs_path   = "bev_datasets/SegmentationClass"
+    # classes     = ["_background_","aeroplane", "bicycle", "bird", "boat", "bottle", "bus", "car", "cat", "chair", "cow", "diningtable", "dog", "horse", "motorbike", "person", "pottedplant", "sheep", "sofa", "train", "tvmonitor"]
+    classes     = ["_background_","lane_edge", "drivable", "dashed_yellow_lane"]
     
-    count = os.listdir("./datasets/before/") 
+    count = os.listdir("./bev_datasets/before/") 
     for i in range(0, len(count)):
-        path = os.path.join("./datasets/before", count[i])
+        path = os.path.join("./bev_datasets/before", count[i])
 
         if os.path.isfile(path) and path.endswith('json'):
             data = json.load(open(path))

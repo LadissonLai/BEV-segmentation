@@ -73,7 +73,7 @@ if __name__ == "__main__":
     #   num_classes     训练自己的数据集必须要修改的
     #                   自己需要的分类个数+1，如2+1
     #-----------------------------------------------------#
-    num_classes = 21
+    num_classes = 3+1
     #-----------------------------------------------------#
     #   主干网络选择
     #   vgg
@@ -110,6 +110,7 @@ if __name__ == "__main__":
     #   input_shape     输入图片的大小，32的倍数
     #-----------------------------------------------------#
     input_shape = [512, 512]
+    # input_shape = [1024, 1024]
     
     #----------------------------------------------------------------------------------------------------------------------------#
     #   训练分为两个阶段，分别是冻结阶段和解冻阶段。设置冻结阶段是为了满足机器性能不足的同学的训练需求。
@@ -219,7 +220,7 @@ if __name__ == "__main__":
     #------------------------------#
     #   数据集路径
     #------------------------------#
-    VOCdevkit_path  = 'VOCdevkit'
+    VOCdevkit_path  = 'bev_datasets'
     #------------------------------------------------------------------#
     #   建议选项：
     #   种类少（几类）时，设置为True
@@ -431,10 +432,10 @@ if __name__ == "__main__":
             val_sampler     = None
             shuffle         = True
 
-        gen             = DataLoader(train_dataset, shuffle = shuffle, batch_size = batch_size, num_workers = num_workers, pin_memory=True,
+        gen             = DataLoader(train_dataset, shuffle = shuffle, batch_size = batch_size, num_workers = num_workers, pin_memory=False,
                                     drop_last = True, collate_fn = unet_dataset_collate, sampler=train_sampler, 
                                     worker_init_fn=partial(worker_init_fn, rank=rank, seed=seed))
-        gen_val         = DataLoader(val_dataset  , shuffle = shuffle, batch_size = batch_size, num_workers = num_workers, pin_memory=True, 
+        gen_val         = DataLoader(val_dataset  , shuffle = shuffle, batch_size = batch_size, num_workers = num_workers, pin_memory=False, 
                                     drop_last = True, collate_fn = unet_dataset_collate, sampler=val_sampler, 
                                     worker_init_fn=partial(worker_init_fn, rank=rank, seed=seed))
         
@@ -482,10 +483,10 @@ if __name__ == "__main__":
                 if distributed:
                     batch_size = batch_size // ngpus_per_node
 
-                gen             = DataLoader(train_dataset, shuffle = shuffle, batch_size = batch_size, num_workers = num_workers, pin_memory=True,
+                gen             = DataLoader(train_dataset, shuffle = shuffle, batch_size = batch_size, num_workers = num_workers, pin_memory=False,
                                             drop_last = True, collate_fn = unet_dataset_collate, sampler=train_sampler, 
                                             worker_init_fn=partial(worker_init_fn, rank=rank, seed=seed))
-                gen_val         = DataLoader(val_dataset  , shuffle = shuffle, batch_size = batch_size, num_workers = num_workers, pin_memory=True, 
+                gen_val         = DataLoader(val_dataset  , shuffle = shuffle, batch_size = batch_size, num_workers = num_workers, pin_memory=False, 
                                             drop_last = True, collate_fn = unet_dataset_collate, sampler=val_sampler, 
                                             worker_init_fn=partial(worker_init_fn, rank=rank, seed=seed))
 
@@ -499,6 +500,10 @@ if __name__ == "__main__":
             fit_one_epoch(model_train, model, loss_history, eval_callback, optimizer, epoch, 
                     epoch_step, epoch_step_val, gen, gen_val, UnFreeze_Epoch, Cuda, dice_loss, focal_loss, cls_weights, num_classes, fp16, scaler, save_period, save_dir, local_rank)
 
+            import gc
+            gc.collect()
+            torch.cuda.empty_cache()
+            
             if distributed:
                 dist.barrier()
 
