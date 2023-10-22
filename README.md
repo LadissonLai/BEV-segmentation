@@ -5,6 +5,12 @@ BEV detection project segments drivable area, lane edge and middle line in the B
      <img src="doc/ret1.PNG" width="200"/><img src="doc/ret3.PNG" width="200"/><img src="doc/ret2.PNG" width="200"/>
 </center>
 
+<div style="display:inline-block">
+  <img src="doc/ret1.PNG" alt="image1", width="200">
+  <img src="doc/ret2.PNG" alt="image2", width="200">
+  <img src="doc/ret3.PNG" alt="image3", width="200">
+</div>
+
 # Get Started
 1. install dependency, refer to [README-origin.md](README-origin.md)
 2. run the inference.
